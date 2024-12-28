@@ -1,93 +1,112 @@
 ## Hotel Management Project
 
-# Setting Up a Django Project
-
-This guide will walk you through setting up a Django project and installing the required libraries using a virtual environment.
+# DjangoMart E-commerce Project
 
 ## Prerequisites
 
-Before you begin, make sure you have the following installed:
+- Python 3.8+
+- PostgreSQL
+- Git
 
-- Python (preferably Python 3.x)
-- `pip` (Python package manager)
+## PostgreSQL Setup
 
-## Step 1: Clone the Repository
+### Windows
+1. Download PostgreSQL from [official website](https://www.postgresql.org/download/windows/)
+2. Run installer and follow setup wizard
+3. Set password for postgres user
+4. Open pgAdmin to manage database
+5. Create database:
+   ```sql
+   CREATE DATABASE mysite;
+   ```
 
-Clone the project repository from GitHub (replace `<repository-url>` with the actual URL):
+### Linux
+1. Install PostgreSQL:
+   ```bash
+   sudo apt update
+   sudo apt install postgresql postgresql-contrib
+   ```
+2. Start service:
+   ```bash
+   sudo systemctl start postgresql
+   sudo systemctl enable postgresql
+   ```
+3. Create database:
+   ```bash
+   sudo -u postgres psql
+   CREATE DATABASE mysite;
+   ```
 
-```bash
-git clone <repository-url>
-cd <project-directory>
-```
+## Project Setup
 
-## Step 2: Create and Activate a Virtual Environment
+1. Clone repository:
+   ```bash
+   git clone <repository-url>
+   cd djangomart
+   ```
 
-Create a virtual environment named `venv` (or choose a different name):
+2. Create virtual environment:
+   ```bash
+   python -m venv venv
+   ```
 
-```bash
-python3 -m venv venv
-```
+3. Activate virtual environment:
+   - Windows: `venv\Scripts\activate`
+   - Linux: `source venv/bin/activate`
 
-Activate the virtual environment:
+4. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-- macOS/Linux:
-  ```bash
-  source venv/bin/activate
-  ```
-- Windows:
-  ```bash
-  venv\Scripts\activate
-  ```
+5. Create .env file with these variables:
+   ```
+   EMAIL_HOST=smtp.gmail.com
+   EMAIL_HOST_USER=your-email@gmail.com
+   EMAIL_HOST_PASSWORD=your-app-password
+   
+   CLOUDINARY_CLOUD_NAME=your-cloud-name
+   CLOUDINARY_API_KEY=your-api-key
+   CLOUDINARY_API_SECRET=your-api-secret
+   
+   SSLCOMMERZ_STORE_ID=your-store-id
+   SSLCOMMERZ_STORE_PASSWORD=your-store-password
+   ```
 
-## Step 3: Install Django and Project Dependencies
+6. Run migrations:
+   ```bash
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
 
-Install Django and other project dependencies using `pip`:
+7. Create superuser:
+   ```bash
+   python manage.py createsuperuser
+   ```
 
-```bash
-pip install -r requirements.txt
-```
+8. Run with gunicorn:
+   ```bash
+   python -m gunicorn djangomart.asgi:application -k uvicorn.workers.UvicornWorker
+   ```
 
-The `requirements.txt` file should contain a list of required Python packages. If not provided, create one and include the necessary packages with their versions.
+Access admin panel at: http://localhost:8000/admin
 
-## Step 4: Set Up Django Project
+## Environment Variables Description
 
-Initialize a new Django project (replace `<project-name>` with your preferred project name):
+- `EMAIL_*`: For email notifications
+- `CLOUDINARY_*`: For media file storage
+- `SSLCOMMERZ_*`: For payment processing
 
-```bash
-django-admin startproject <project-name> .
-```
+## Troubleshooting
 
-This command will create a new Django project in the current directory.
+1. Database connection issues:
+   - Check PostgreSQL service is running
+   - Verify database credentials in settings.py
+   - Ensure database exists
 
-## Step 5: Run Migrations (Optional)
-
-If your project includes database models, run database migrations:
-
-```bash
-python manage.py migrate
-```
-
-This will apply any pending database migrations.
-
-## Step 6: Create a Superuser (Optional)
-
-If you need to access the Django admin interface, create a superuser:
-
-```bash
-python manage.py createsuperuser
-```
-
-Follow the prompts to set up a superuser account.
-
-## Step 7: Run the Django Development Server
-
-Start the Django development server:
-
-```bash
-python manage.py runserver
-```
-
-Visit `http://127.0.0.1:8000/` in your web browser to view the Django project.
+2. Static/Media files not loading:
+   - Run `python manage.py collectstatic`
+   - Check Cloudinary credentials
 
 ## Additional Notes
 
